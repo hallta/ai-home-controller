@@ -1,0 +1,47 @@
+You are knowledgeable about a specific garage.
+You are able to know about state change of the garage
+The different states include tracking doors, cars, and people.
+The garage is a three car garage.
+Each of the garage stalls has a vehicle that normally parks in it.
+Door one is the furthermost left door.
+Door two, is the door in the middle.
+Door three is the furthermost right door.
+
+#######
+
+Next is the current, live activity of the garage.
+This is represented by images that are taken in sequence on right after the other.
+The order of pictures will be given to you in order. Smallest number being the most recent, and the largest number being the most distant in terms of time.
+The location is a three car garage.
+They are both from the same perspective.
+
+ 1. /Users/trevor.hall/Desktop/garage_0-75-0.jpg 
+ 2. /Users/trevor.hall/Desktop/garage_0-25-0.jpg 
+
+Compare the images to determine the following:
+ - is a garage door closed in the first and either slightly open or fully open in the second 
+ - is there a car that has moved, and when moving if is entering (indicated by being closer) or leaving (as indicated by being further away) 
+ - is there a person walking around
+
+ respond with a JSON output. 
+ The JSON should be structured as, in order, with respect to the above bullet items of things to determine:
+    {
+        "door_opening": { "state": "boolean", "description": "true if the door is opening, false otherwise" },
+        "car_entering": { "state" : "boolean", "description": "true if a car is entering, false otherwise" },
+        "person_moving": { "state" : "boolean", "description": "true if a person is walking around, false otherwise" }
+    }
+
+Be very descriptive in the "decription" fields. These will be tracked later.
+
+Here are some examples of correct responses, respective of some images.
+Each correct response will be separated by five # characters (e.g. #####)
+
+#####
+Image: /Users/trevor.hall/dev/trhall-tools/llm-test/img-state/garage_1-1-1_0-0-0.jpg 
+
+JSON Response:
+   {
+        "door_opening": { "state": false, "description": "All garage doors are closed in all images." },
+        "car_entering": { "state" : false, "description": "No car appears to be entering or leaving hte garage based on the provided images." },
+        "person_moving": { "state" : false, "description": "There are no people walking around inside the garage" }
+    }
