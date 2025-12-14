@@ -44,9 +44,9 @@ def main():
             tlog(f"Reading prompt file: {prompt_file}")
             # Run the command
             with open(prompt_file, 'r') as f:
-                tlog(f"Executing: ollama run llava")
+                tlog(f"Executing: ollama run qwen3-vl:30b")
                 process = subprocess.Popen(
-                    ['ollama', 'run', 'llava'],
+                    ['ollama', 'run', 'qwen3-vl:30b'],
                     stdin=f,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -55,7 +55,7 @@ def main():
                 # Wait for completion (with timeout to prevent hanging)
                 try:
                     tlog(f"Waiting for command to complete...")
-                    stdout, stderr = process.communicate(timeout=60)
+                    stdout, stderr = process.communicate(timeout=120)
                     if process.returncode == 0:
                         tlog(f"Command completed successfully (exit code: {process.returncode})")
                     else:
