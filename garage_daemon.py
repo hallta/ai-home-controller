@@ -38,7 +38,6 @@ def main():
     iteration = 0
     while True:
         iteration += 1
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         tlog(f"Starting iteration {iteration}")
         
         try:
@@ -69,7 +68,6 @@ def main():
                     stdout, stderr = process.communicate()
                 
         except FileNotFoundError as e:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             tlog(f"Error: ollama command not found or garage.prompt file missing: {e}", file=sys.stderr)
             tlog(f"Waiting 30 seconds before retry...")
             time.sleep(30)
@@ -77,14 +75,12 @@ def main():
         except KeyboardInterrupt:
             signal_handler(None, None)
         except Exception as e:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             tlog(f"Error: {e}", file=sys.stderr)
             tlog(f"Waiting 30 seconds before retry...")
             time.sleep(30)
             continue
         
         # Sleep for 30 seconds before next run
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         tlog(f"Iteration {iteration} complete.")
 
         # INSERT_YOUR_CODE
@@ -93,23 +89,19 @@ def main():
         import json
         import re
 
-        tlog(stdout)
+        stdout_str = stdout.decode('utf-8', errors='ignore') if isinstance(stdout, bytes) else str(stdout)
 
-      # stdout_str = stdout.decode('utf-8', errors='ignore') if isinstance(stdout, bytes) else str(stdout)
-      # 
-      # # Find the JSON substring - look for {...} pattern
-      # json_match = re.search(r'\{[\s\S]*?\}', stdout_str)
-      # if json_match:
-      #     json_str = json_match.group(0)
-      #     try:
-      #         parsed_json = json.loads(json_str)
-      #         tlog(f"Parsed JSON: {parsed_json}")
-      #     except Exception as e:
-      #         tlog(f"Failed to parse JSON: {e}", file=sys.stderr)
-      # else:
-      #     tlog(f"No JSON found in output", file=sys.stderr)
+        # Find the JSON substring - look for {...} pattern
+        match = re.search(r'\{.*\}', stdout_str, re.DOTALL)
+        if match:
+            json_str = match.group()
+            obj = json.loads(json_str)
+            tlog(f"door opening: {obj['door_opening']['state']}")
+        else:
+            print("No JSON found")
 
-      #     ## 
+
+            ## 
         
         tlog(f"Sleeping for 30 seconds...")
         time.sleep(30)

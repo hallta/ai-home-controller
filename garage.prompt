@@ -40,62 +40,8 @@ Provide your analysis strictly in JSON format.
     }
 }
 
-**EXAMPLES**
-
-####
-Example 1: All doors closed, no activity, all three cars in their stalls
-Image 1: /Users/trevor.hall/dev/ai-home-controller/img-state/garage_1-1-1_0-0-0.jpg
-Image 2: /Users/trevor.hall/dev/ai-home-controller/img-state/garage_1-1-1_0-0-0_v2example.jpg
-
-Response:
-{
-    "door_opening": { "state": false, "which": "None", "description": "All doors remain closed.", "reasoning": "Both images show all three garage doors fully closed with no change." },
-    "car_entering": { "state": false, "which": "None", "description": "No cars moving.", "reasoning": "The vehicles in the stalls are stationary in both frames." },
-    "person_moving": { "state": false, "description": "No people detected.", "reasoning": "No human figures are visible in the garage area." }
-}
-#####
-
-####
-Example 2: Door 1 open, Door two and three closed, car one and two are in the stall, car three is not in the stall, no other activity 
-Image 1: /Users/trevor.hall/dev/ai-home-controller/img-state/garage_1-1-1_0-0-0.jpg
-Image 2: /Users/trevor.hall/dev/ai-home-controller/img-state/garage_1-1-0_1-0-0.jpg
-
-Response:
-{
-    "door_opening": { "state": true, "which": "Door 1", "description": "Door 1 is opening", "reasoning": "Both images show the cars in the same state with no additional movement. The second image shows door 1 open, therefore must be opening." },
-    "car_entering": { "state": false, "which": "None", "description": "No cars moving.", "reasoning": "The vehicles in the stalls are stationary in both frames." },
-    "person_moving": { "state": false, "description": "No people detected.", "reasoning": "No human figures are visible in the garage area." }
-}
-#####
-
-####
-Example 3: All doors closed, car three is out of the stall, and no other movement. 
-Image 1: /Users/trevor.hall/dev/ai-home-controller/img-state/garage_1-1-1_0-0-0.jpg
-Image 2: /Users/trevor.hall/dev/ai-home-controller/img-state/garage_1-1-0_0-0-0.jpg
-
-Response:
-{
-    "door_opening": { "state": false, "which": "None", "description": "All doors remain closed", "reasoning": "Both images show the cars and doors in the same state." },
-    "car_entering": { "state": false, "which": "None", "description": "No cars moving.", "reasoning": "The vehicles in the stalls are stationary in both frames." },
-    "person_moving": { "state": false, "description": "No people detected.", "reasoning": "No human figures are visible in the garage area." }
-}
-#####
-
-####
-Example 4: All doors closed, car three is out of the stall, and no other movement. 
-Image 1: /Users/trevor.hall/dev/ai-home-controller/img-state/garage_1-1-1_0-0-0.jpg
-Image 2: /Users/trevor.hall/dev/ai-home-controller/img-state/garage_0-1-0_1-0-0.jpg
-
-Response:
-{
-    "door_opening": { "state": true, "which": "Door 1", "description": "Door 1 opened.", "reasoning": "The second image shows the door open." },
-    "car_entering": { "state": true, "which": "Door 1", "description": "Car 1 moving.", "reasoning": "The second image shows the car closer to the picture" },
-    "person_moving": { "state": false, "description": "No people detected.", "reasoning": "No human figures are visible in the garage area." }
-}
-#####
-
 **CURRENT INPUT**
 Image 1: /Users/trevor.hall/Downloads/1-baking-in-n-4.jpg
 Image 2: /Users/trevor.hall/Downloads/1-baking-in.jpg 
 
-Compare the images and generate the JSON response:
+Compare the images and generate the JSON response.

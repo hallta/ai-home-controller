@@ -22,7 +22,9 @@
 
 
 
-cat garage.prompt| ollama run llava
+#cat garage.prompt| ollama run llava
+#cat garage.prompt| ollama run qwen3-vl:8b
+cat garage.prompt| ollama run qwen3-vl:30b 
 
 #model="llama3"
 #model="llava"
