@@ -12,6 +12,8 @@ import subprocess
 from datetime import datetime
 
 
+LLM_TIMEOUT = 600  # seconds
+
 def tlog(message):
     """Log a message with timestamp."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -55,7 +57,7 @@ def main():
                 # Wait for completion (with timeout to prevent hanging)
                 try:
                     tlog(f"Waiting for command to complete...")
-                    stdout, stderr = process.communicate(timeout=120)
+                    stdout, stderr = process.communicate(timeout=LLM_TIMEOUT)
                     if process.returncode == 0:
                         tlog(f"Command completed successfully (exit code: {process.returncode})")
                     else:
@@ -63,7 +65,7 @@ def main():
                         if stderr:
                             tlog(f"Stderr: {stderr.decode('utf-8', errors='ignore')}", file=sys.stderr)
                 except subprocess.TimeoutExpired:
-                    tlog(f"Command timed out after 60 seconds, killing process...", file=sys.stderr)
+                    tlog(f"Command timed out after {LLM_TIMEOUT} seconds, killing process...", file=sys.stderr)
                     process.kill()
                     stdout, stderr = process.communicate()
                 
@@ -99,6 +101,8 @@ def main():
             tlog(f"door opening: {obj['door_opening']['state']}")
         else:
             print("No JSON found")
+
+        raise Exception("test")
 
 
             ## 
