@@ -17,6 +17,7 @@ Compare Image 2 (Current) against Image 1 (Past) to detect state changes.
 Provide your analysis strictly in JSON format.
 - "state" must be a true/false boolean.
 - "which" must identify the specific door/car (e.g., "Left", "Middle", "Right", "None").
+- "direction" must identify the direction the car is moving into or out of the garage (e.g. "Entering", "Exiting")
 - "reasoning" is a required sentence explaining what you see to justify the decision.
 
 **JSON TEMPLATE**
@@ -27,9 +28,10 @@ Provide your analysis strictly in JSON format.
         "description": "string",
         "reasoning": "Explain the visual difference you see between Image 1 and Image 2 regarding the doors."
     },
-    "car_entering": {
+    "car_moving": {
         "state": boolean,
         "which": "string",
+        "direction": "string"
         "description": "string",
         "reasoning": "Explain if a car appears, disappears, or changes size between the images."
     },
@@ -41,7 +43,7 @@ Provide your analysis strictly in JSON format.
 }
 
 **CURRENT INPUT**
-Image 1: /Users/trevor.hall/Downloads/1-baking-in-n-4.jpg
-Image 2: /Users/trevor.hall/Downloads/1-baking-in.jpg 
+Image 1: /Users/trevor.hall/Downloads/1-baking-in.jpg 
+Image 2: /Users/trevor.hall/Downloads/1-baking-in-n-4.jpg
 
 Compare the images and generate the JSON response.

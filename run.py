@@ -99,6 +99,8 @@ def main():
             json_str = match.group()
             obj = json.loads(json_str)
             tlog(f"door opening: {obj['door_opening']['state']}")
+            tlog(f"car moving: {obj['car_moving']['state']}")
+            tlog(f"door opening: {obj['person_moving']['state']}")
         else:
             print("No JSON found")
 
