@@ -14,6 +14,18 @@ from datetime import datetime
 
 LLM_TIMEOUT = 600  # seconds
 
+class GarageState:
+    def __init__(self, obj: dict):
+        self.door_opening = obj['door_opening']['state']
+        self.car_moving = obj['car_moving']['state']
+        self.person_moving = obj['person_moving']['state']
+        self.car_moving_direction = obj['car_moving']['direction']
+        self.reasoning = obj['door_opening']['reasoning']
+
+    def __str__(self):
+        return f"GarageState(door_opening={self.door_opening}, car_moving={self.car_moving}, person_moving={self.person_moving}, direction={self.direction}, reasoning={self.reasoning})"
+
+
 def tlog(message):
     """Log a message with timestamp."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
