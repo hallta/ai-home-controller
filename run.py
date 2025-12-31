@@ -4,11 +4,13 @@ Script to run 'cat garage.prompt | ollama run llava' in an infinite loop.
 Runs in the foreground with a 30 second sleep between iterations.
 """
 
+import json
 import os
-import sys
-import time
+import re
 import signal
 import subprocess
+import sys
+import time
 from datetime import datetime
 
 
@@ -22,8 +24,38 @@ class GarageState:
         self.car_moving_direction = obj['car_moving']['direction']
         self.reasoning = obj['door_opening']['reasoning']
 
+    def __eq__(self, other):
+        return (self.door_opening == other.door_opening and
+                self.car_moving == other.car_moving and
+                self.person_moving == other.person_moving and
+                self.car_moving_direction == other.car_moving_direction and
+                self.reasoning == other.reasoning)
+
     def __str__(self):
-        return f"GarageState(door_opening={self.door_opening}, car_moving={self.car_moving}, person_moving={self.person_moving}, direction={self.direction}, reasoning={self.reasoning})"
+        return f"GarageState(door_opening={self.door_opening}, car_moving={self.car_moving}, person_moving={self.person_moving}, direction={self.car_moving_direction})"
+
+    def should_act(self):
+        return self.car_moving or self.person_moving
+
+    def act(self):
+        if self.should_act():
+            tlog(f"Acting..., {self.reasoning}")
+            if self.car_moving:
+                tlog(f"Car moving..., {self.reasoning}")
+
+                # When we spot a car moving, we will want to turn the lights on
+                # when they are entering, but turn them off when they are exiting.
+                if self.car_moving_direction == "Entering":
+                    tlog(f"Car entering..., {self.reasoning}")
+                else:
+                    tlog(f"Car exiting..., {self.reasoning}")
+
+            # When we spot a person moving, we will want to turn the lights on
+            # and keep them on a bit longer than if a car is moving. 
+            if self.person_moving:
+                tlog(f"Person moving..., {self.reasoning}")
+        else:
+            tlog("Not acting...")
 
 
 def tlog(message):
@@ -97,30 +129,28 @@ def main():
         # Sleep for 30 seconds before next run
         tlog(f"Iteration {iteration} complete.")
 
-        # INSERT_YOUR_CODE
-        # Parse stdout (string) for JSON, load as object
+        try:
+            stdout_str = stdout.decode('utf-8', errors='ignore') if isinstance(stdout, bytes) else str(stdout)
 
-        import json
-        import re
+            # find the json substring - look for {...} pattern
+            match = re.search(r'\{.*\}', stdout_str, re.DOTALL)
+            if match:
+                json_str = match.group()
+                try:
+                    obj = json.loads(json_str)
+                    garage_state = GarageState(obj)
 
-        stdout_str = stdout.decode('utf-8', errors='ignore') if isinstance(stdout, bytes) else str(stdout)
+                    garage_state.act()
+                    tlog(f"GarageState: {garage_state}")
+                except json.JSONDecodeError as e:
+                    tlog(f"JSON decode error: {e}")
+                except Exception as e:
+                    tlog(f"Error initializing GarageState: {e}")
+            else:
+                tlog("No JSON found")
+        except Exception as e:
+            tlog(f"Error while processing stdout: {e}")
 
-        # Find the JSON substring - look for {...} pattern
-        match = re.search(r'\{.*\}', stdout_str, re.DOTALL)
-        if match:
-            json_str = match.group()
-            obj = json.loads(json_str)
-            tlog(f"door opening: {obj['door_opening']['state']}")
-            tlog(f"car moving: {obj['car_moving']['state']}")
-            tlog(f"door opening: {obj['person_moving']['state']}")
-        else:
-            print("No JSON found")
-
-        raise Exception("test")
-
-
-            ## 
-        
         tlog(f"Sleeping for 30 seconds...")
         time.sleep(30)
 
